@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Dashboard Propriétaire - Courtier Virtuel{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Bienvenue, {{ user.first_name|default:user.username }} 👑</h1>
+        <p class="subtitle">Gérez vos propriétés et rendez-vous</p>
+    </div>
+
+    <div class="dashboard-actions">
+        <a href="{% url 'create_annonce' %}" class="dashboard-card card-primary">
+            <div class="card-icon">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+            <h3>Nouvelle annonce</h3>
+            <p>Publiez une nouvelle propriété</p>
+        </a>
+
+        <a href="{% url 'mes_rdv' %}" class="dashboard-card card-secondary">
+            <div class="card-icon">
+                <i class="fas fa-calendar-day"></i>
+            </div>
+            <h3>Gérer les rendez-vous</h3>
+            <p>Voir les demandes de visite</p>
+        </a>
+    </div>
+
+    <div class="dashboard-section">
+        <h2><i class="fas fa-home"></i> Vos dernières annonces</h2>
+        {% if annonces %}
+        <div class="annonces-grid">
+            {% for annonce in annonces|slice:":3" %}
+            <div class="annonce-card">
+                <div class="annonce-image" style="background-image: url('{{ annonce.image.url }}');"></div>
+                <div class="annonce-content">
+                    <h3>{{ annonce.titre }}</h3>
+                    <p class="annonce-location"><i class="fas fa-map-marker-alt"></i> {{ annonce.localisation }}</p>
+                    <p class="annonce-price">{{ annonce.prix }} FCFA</p>
+                    <div class="annonce-status">
+                        <span class="badge badge-{{ annonce.get_status_class }}">{{ annonce.get_statut_display }}</span>
+                    </div>
+                    <a href="{% url 'update_annonce' annonce.pk %}" class="btn btn-sm">Modifier</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <a href="{% url 'mes_annonces' %}" class="btn btn-link">Voir toutes vos annonces →</a>
+        {% else %}
+        <p class="no-results">Vous n'avez pas encore publié d'annonce</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

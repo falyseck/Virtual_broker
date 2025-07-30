@@ -1,0 +1,24 @@
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="raison" class="form-label">Raison (optionnelle) :</label>
+    <textarea class="form-control" id="raison" name="raison" rows="3"></textarea>
+  </div>
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a href="{% url 'mes_rdv' %}" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i> Retour
+    </a>
+    <button type="submit" class="btn btn-danger">
+      <i class="fas fa-times-circle"></i> Confirmer l'annulation
+    </button>
+  </div>
+</form>
+
+<script>
+  document.querySelector("form").addEventListener("submit", function(e) {
+    const btn = this.querySelector("button[type=submit]");
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Annulation en cours...';
+  });
+</script>

@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Tableau de Bord Client{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Bienvenue, {{ user.first_name|default:user.username }}</h1>
+        <p class="subtitle">Gérez vos recherches immobilières</p>
+    </div>
+
+    <div class="dashboard-actions">
+        <a href="{% url 'annonce_list' %}" class="dashboard-card">
+            <div class="card-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3>Voir les annonces</h3>
+            <p>Parcourez les propriétés disponibles</p>
+        </a>
+
+        <a href="{% url 'mes_rdv' %}" class="dashboard-card">
+            <div class="card-icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h3>Gérer mes rendez-vous</h3>
+            <p>Consultez et modifiez vos visites</p>
+        </a>
+    </div>
+</div>
+{% endblock %}

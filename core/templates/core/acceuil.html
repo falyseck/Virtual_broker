@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h2>Trouvez votre futur logement.</h2>
+            <p class="subtitle">Solution immobilière moderne et sécurisée</p>
+            <a href="{% url 'annonce_list' %}" class="primary-btn">Voir les annonces</a>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <div class="feature-card">
+            <h3>Simplicité</h3>
+            <p>Interface intuitive pour une expérience fluide</p>
+        </div>
+        <div class="feature-card">
+            <h3>Sécurité</h3>
+            <p>Transactions protégées et transparentes</p>
+        </div>
+        <div class="feature-card">
+            <h3>Efficacité</h3>
+            <p>Résultats rapides et pertinents</p>
+        </div>
+    </div>
+</section>
+
+<section class="property-listings">
+    <div class="container">
+        <h2 class="section-title">Dernières annonces</h2>
+        <div class="properties-grid">
+            {% for annonce in annonces %}
+            <article class="property-card">
+                <div class="property-content">
+                    <h3>{{ annonce.titre }}</h3>
+                    <p>{{ annonce.description|truncatechars:120 }}</p>
+                    <a href="{% url 'annonce_detail' annonce.pk %}" class="secondary-btn">Détails</a>
+                </div>
+            </article>
+            {% empty %}
+            <p class="no-results">Aucune annonce disponible actuellement</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

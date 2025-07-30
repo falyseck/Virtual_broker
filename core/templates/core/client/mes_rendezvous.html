@@ -1,0 +1,53 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="fas fa-calendar-check"></i> Mes demandes de visite</h2>
+
+    <div class="table-responsive mt-3">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Annonce</th>
+                    <th>Date demandée</th>
+                    <th>Statut</th>
+                    <th>Contact propriétaire</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rdv in rendezvous %}
+                <tr>
+                    <td>
+                        <a href="{% url 'annonce_detail' rdv.annonce.id %}">
+                            {{ rdv.annonce.titre }}
+                        </a>
+                    </td>
+                    <td>{{ rdv.date_rdv|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <span class="badge
+                            {% if rdv.statut == 'confirme' %}bg-success
+                            {% elif rdv.statut == 'refuse' %}bg-danger
+                            {% else %}bg-warning{% endif %}">
+                            {{ rdv.get_statut_display }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if rdv.statut == 'confirme' %}
+                            <a href="mailto:{{ rdv.annonce.proprietaire.email }}?subject=RDV pour {{ rdv.annonce.titre|urlencode }}">
+                                <i class="fas fa-envelope"></i> Contacter
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Disponible après confirmation</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">Aucun rendez-vous enregistré</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

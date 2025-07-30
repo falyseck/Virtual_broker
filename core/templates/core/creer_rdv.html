@@ -1,0 +1,52 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Demande de rendez-vous</h2>
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Annonce</label>
+                        <input type="text" class="form-control" value="{{ annonce.titre }}" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        {{ form.client_name.label_tag }}
+                        {{ form.client_name }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.client_phone.label_tag }}
+                        {{ form.client_phone }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        {{ form.date_rdv.label_tag }}
+                        {{ form.date_rdv }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.duree.label_tag }}
+                        {{ form.duree }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form.notes.label_tag }}
+                    {{ form.notes }}
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-calendar-check"></i> Confirmer la demande
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

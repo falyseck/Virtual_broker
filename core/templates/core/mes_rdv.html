@@ -1,0 +1,249 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="rdv-container">
+    <div class="rdv-header">
+        <h1 class="rdv-title">
+            <i class="fas fa-calendar-alt"></i>
+            {% if request.user.role == 'proprietaire' %}
+            Demandes de rendez-vous
+            {% else %}
+            Mes rendez-vous
+            {% endif %}
+        </h1>
+    </div>
+
+    {% if rendezvous %}
+        {% for rdv in rendezvous %}
+        <div class="rdv-card">
+            <div class="rdv-card-header">
+                <div class="rdv-property-title">
+                    <a href="{% url 'annonce_detail' rdv.annonce.id %}" style="color: white">
+                        {{ rdv.annonce.titre }}
+                    </a>
+                </div>
+                <span class="rdv-status
+                    {% if rdv.statut == 'confirme' %}status-confirmed
+                    {% elif rdv.statut == 'annule' %}status-cancelled
+                    {% else %}status-pending{% endif %}">
+                    {{ rdv.get_statut_display }}
+                </span>
+            </div>
+
+            <div class="rdv-card-body">
+                <div>
+                    <div class="rdv-detail">
+                        <span class="rdv-detail-label">Date et heure</span>
+                        <span class="rdv-detail-value">
+                            <i class="far fa-clock me-2"></i>
+                            {{ rdv.date_rdv|date:"l d F Y à H:i"|capfirst }}
+                        </span>
+                    </div>
+
+                    <div class="rdv-detail">
+                        <span class="rdv-detail-label">Durée</span>
+                        <span class="rdv-detail-value">
+                            <i class="fas fa-hourglass-half me-2"></i>
+                            {{ rdv.duree }} minutes
+                        </span>
+                    </div>
+
+                    <!-- Contact Information Section -->
+                    <div class="{% if request.user.role == 'proprietaire' %}client-info-card{% else %}proprietaire-info-card{% endif %}">
+                        <h5><i class="fas fa-address-card"></i> Informations de contact</h5>
+
+                        {% if request.user.role == 'proprietaire' %}
+                        <!-- Proprietaire sees client info -->
+                        <div class="rdv-detail">
+                            <span class="rdv-detail-label">Client</span>
+                            <span class="rdv-detail-value">
+                                <i class="fas fa-user me-2"></i>
+                                {{ rdv.client_name|default:rdv.client.username }}
+                            </span>
+                        </div>
+                        <div class="rdv-detail">
+                            <span class="rdv-detail-label">Téléphone</span>
+                            <span class="rdv-detail-value">
+                                <i class="fas fa-phone me-2"></i>
+                                {{ rdv.client_phone|default:"Non renseigné" }}
+                            </span>
+                        </div>
+                        <div class="rdv-detail">
+                            <span class="rdv-detail-label">Email</span>
+                            <span class="rdv-detail-value">
+                                <i class="fas fa-envelope me-2"></i>
+                                {{ rdv.client.email }}
+                            </span>
+                        </div>
+                        {% else %}
+                        <!-- Client sees proprietaire info -->
+                        <div class="rdv-detail">
+                            <span class="rdv-detail-label">Propriétaire</span>
+                            <span class="rdv-detail-value">
+                                <i class="fas fa-user-tie me-2"></i>
+                                {{ rdv.proprietaire_name|default:rdv.annonce.proprietaire.username }}
+                            </span>
+                        </div>
+                        <div class="rdv-detail">
+                            <span class="rdv-detail-label">Téléphone</span>
+                            <span class="rdv-detail-value">
+                                <i class="fas fa-phone me-2"></i>
+                                {{ rdv.proprietaire_phone|default:"Non renseigné" }}
+                            </span>
+                        </div>
+                        <div class="rdv-detail">
+                            <span class="rdv-detail-label">Email</span>
+                            <span class="rdv-detail-value">
+                                <i class="fas fa-envelope me-2"></i>
+                                {{ rdv.annonce.proprietaire.email }}
+                            </span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    <div class="rdv-detail">
+                        <span class="rdv-detail-label">Adresse</span>
+                        <span class="rdv-detail-value">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            {{ rdv.annonce.adresse_complete }}
+                        </span>
+                    </div>
+
+                    <div class="rdv-detail">
+                        <span class="rdv-detail-label">Notes</span>
+                        <p class="rdv-detail-value">
+                            {% if rdv.notes %}
+                                {{ rdv.notes }}
+                            {% else %}
+                                Aucune note supplémentaire
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="rdv-actions" style="padding: 0 1.5rem 1.5rem;">
+            {% if rdv.statut != 'annule' %}
+                {% if request.user.role == 'proprietaire' %}
+                    <a href="{% url 'modifier_rendezvous' rdv.id %}" class="btn-rdv btn-rdv-secondary">
+                        <i class="fas fa-edit"></i> Modifier
+                    </a>
+                {% endif %}
+                <a href="{% url 'confirmer_annulation' rdv.id %}"
+                   class="btn-rdv btn-rdv-danger"
+                   onclick="return confirm('Confirmez-vous l\'annulation de ce rendez-vous ?');">
+                    <i class="fas fa-times-circle"></i> Annuler
+                </a>
+            {% else %}
+                <form method="post" action="{% url 'mes_rdv' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="rdv_id" value="{{ rdv.id }}">
+                    <button type="submit" name="delete_rdv" class="btn-rdv btn-rdv-danger"
+                            onclick="return confirm('Supprimer définitivement ce rendez-vous ?');">
+                        <i class="fas fa-trash"></i> Supprimer
+                    </button>
+                    </form>
+                {% endif %}
+
+
+
+                <a href="{% url 'annonce_detail' rdv.annonce.id %}" class="btn-rdv btn-rdv-secondary">
+                    <i class="fas fa-home"></i> Voir l'annonce
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-rdv">
+            <div class="no-rdv-icon">
+                <i class="far fa-calendar-times"></i>
+            </div>
+            <h3>
+                {% if request.user.role == 'proprietaire' %}
+                Aucune demande de rendez-vous pour le moment
+                {% else %}
+                Vous n'avez aucun rendez-vous programmé
+                {% endif %}
+            </h3>
+            <p>
+                {% if request.user.role == 'proprietaire' %}
+                Les demandes de visite apparaitront ici lorsqu'un client prendra rendez-vous pour une de vos annonces.
+                {% else %}
+                Parcourez nos annonces et planifiez une visite dès maintenant !
+                {% endif %}
+            </p>
+            <a href="{% url 'annonce_list' %}" class="btn-rdv btn-rdv-secondary" style="margin-top: 1rem;">
+                <i class="fas fa-search"></i> Explorer les annonces
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+
+
+<style>
+/* Contact cards styling */
+.client-info-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    border-left: 4px solid #6c757d;
+}
+
+.proprietaire-info-card {
+    background: #f0f7ff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    border-left: 4px solid var(--primary);
+}
+
+.client-info-card h5,
+.proprietaire-info-card h5 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.fa-user-tie {
+    color: var(--primary);
+}
+
+/* Style for the form button to match existing buttons */
+form button.btn-rdv {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+</style>
+
+<script>
+// Animation des cartes
+document.querySelectorAll('.rdv-card').forEach((card, index) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    card.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.1}s`;
+});
+
+// Ajout dynamique du CSS pour l'animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}

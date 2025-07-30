@@ -1,0 +1,12 @@
+[
+  {
+    "model": "core.annonce",
+    "pk": 1,
+    "fields": {
+      "titre": "Appartement lumineux",
+      "description": "Bel appartement...",
+      "prix": 500,
+      "localisation": "Paris"
+    }
+  }
+]

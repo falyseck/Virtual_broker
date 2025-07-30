@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Courtier Virtuel à Dakar{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{% url 'accueil' %}" class="nav-logo">Courtier Virtuel</a>
+        <div class="menu-toggle" id="mobile-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+        </div>
+
+        <div class="nav-links">
+            <a href="{% url 'accueil' %}" class="{% if request.resolver_match.url_name == 'accueil' %}active{% endif %}">
+                <i class="fas fa-home"></i> Accueil
+            </a>
+            <a href="{% url 'annonce_list' %}" class="{% if request.resolver_match.url_name == 'annonce_list' %}active{% endif %}">
+                <i class="fas fa-search"></i> Explorer
+            </a>
+
+            {% if user.is_authenticated %}
+                <!-- Version connectée -->
+                {% if user.role == 'proprietaire' %}
+                <a href="{% url 'proprietaire_dashboard' %}" class="{% if request.resolver_match.url_name == 'proprietaire_dashboard' %}active{% endif %}">
+                    <i class="fas fa-tachometer-alt"></i> Tableau de bord
+                </a>
+                {% else %}
+                <a href="{% url 'client_dashboard' %}" class="{% if request.resolver_match.url_name == 'client_dashboard' %}active{% endif %}">
+                    <i class="fas fa-tachometer-alt"></i> Tableau de bord
+                </a>
+                {% endif %}
+
+                <a href="{% url 'logout' %}" class="logout-link">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </a>
+            {% else %}
+                <!-- Version non connectée -->
+                <a href="{% url 'register' %}">
+                    <i class="fas fa-user-plus"></i> S'inscrire
+                </a>
+                <a href="{% url 'login' %}">
+                    <i class="fas fa-sign-in-alt"></i> Connexion
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        {% if messages %}
+        <div class="alert-popup">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+                <span class="close-btn">&times;</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer class="footer">
+        Nit, nitay garabam 🌱 - © {% now "Y" %} Courtier Virtuel
+    </footer>
+
+    <script>
+        // Fermer les messages popup
+        document.querySelectorAll('.close-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.target.parentElement.remove();
+            });
+        });
+
+        // Fermer automatiquement après 5 secondes
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                alert.remove();
+            });
+        }, 5000);
+             // Mobile menu toggle
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenu.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

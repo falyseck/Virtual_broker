@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <div class="container mt-5">
+    <h2>Nouvelle annonce</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Publier</button>
+    </form>
+    <a href="{% url 'mes_annonces' %}" class="btn btn-secondary mt-3">Retour à mes annonces</a>
+  </div>
+{% endblock %}
