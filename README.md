@@ -21,5 +21,7 @@
 - Frontend: html/css/boostrap 
 - Backend: Django 
 - Database: SQLite 
-- Hosting:  Render https://courtier-virtuel-dakar.onrender.com/
+- Hosting:  Render
+## App is set up and deployed 
+-https://courtier-virtuel-dakar.onrender.com/
 
