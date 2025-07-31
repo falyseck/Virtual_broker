@@ -7,8 +7,6 @@
 - 📸 Owners can post listings with photos, price, and location.
 - 🔍 Clients can search for apartments by area, type, or budget.
 - 💬 Direct messaging between clients and property owners.
-- ✅ Verified profiles to ensure trust and reduce fraud.
-- ⭐ Ratings and reviews for greater transparency.
 
 ## 🎯 Objectives
 
