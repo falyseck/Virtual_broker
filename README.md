@@ -1,6 +1,6 @@
 # Courtier Virtuel à Dakar 🏡🇸🇳
 
-**Courtier Virtuel à Dakar** is a mobile application that connects apartment owners directly with clients looking for housing in Dakar. It aims to make the rental or buying process simpler, faster, and free from intermediaries.
+**Courtier Virtuel à Dakar** is a mobile application that connects apartment owners directly with clients looking for housing in Dakar. It aims to make the rental process simpler, faster, and free from intermediaries.
 
 ## ✨ Key Features
 
